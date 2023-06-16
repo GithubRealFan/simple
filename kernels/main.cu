@@ -146,7 +146,7 @@
  
  // TODO: Use CUDA streams and events to dispatch new blocks and recieve solutions
  __global__ void solve(uint64* solution, uint64 nonce_start, uint64 update_interval, unsigned int n_nonces, uint256 limit, BYTE* block_bytes) {
-    int blockSize = 16;
+    int blockSize = 64;
     uint64 new_interval = update_interval / blockSize;
      for (uint64 i = blockIdx.x * blockDim.x + threadIdx.x; 
          i < n_nonces * blockSize;
@@ -216,7 +216,7 @@
  
  void runSolve(int blockSize, uint64* solution, uint64 nonce_start, uint64 update_interval, uint256 limit, BYTE* block_bytes) {
      int numBlocks = (blockSize + blockSize - 1) / blockSize;
-     numBlocks = 16;
+     numBlocks = 64;
      solve <<< numBlocks, blockSize >>> (solution, nonce_start, update_interval, blockSize, limit, block_bytes);
  }
  
